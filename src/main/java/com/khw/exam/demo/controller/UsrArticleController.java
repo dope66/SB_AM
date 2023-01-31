@@ -11,17 +11,17 @@ import com.khw.exam.demo.vo.Article;
 
 @Controller
 public class UsrArticleController {
-
+	// 인스턴스 변수
 	private int lastArticleId;
 	private List<Article> articles;
-
+	// 생성자
 	public UsrArticleController() {
 		this.lastArticleId = 0;
 		this.articles = new ArrayList<>();
 		makeTestData();
 
 	}
-
+	// 서비스 메서드
 	private Article writeArticle(String title, String body) {
 		int id = lastArticleId + 1;
 		Article article = new Article(id, title, body);
@@ -98,5 +98,14 @@ public class UsrArticleController {
 		modifyArticle(id, title, body);
 		return article;
 	}
+	@RequestMapping("/usr/article/getArticle")
+	@ResponseBody
+	public Object getArticleAction(int id) {
 
+		Article article = getArticle(id);
+		if (article == null) {
+			return id + "번 게시글은 존재하지 않습니다.";
+		}
+		return article;
+	}
 }
