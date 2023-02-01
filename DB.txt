@@ -1,0 +1,29 @@
+
+
+DROP DATABASE IF EXISTS SB_AM;
+CREATE DATABASE SB_AM;
+USE SB_AM;
+CREATE TABLE article(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	title VARCHAR(200) NOT NULL,
+	`body` TEXT NOT NULL
+);
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title ='title1',
+`body`= 'body1';
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title ='title2',
+`body`= 'body2';
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title ='title3',
+`body`= 'body3';
+
