@@ -48,12 +48,16 @@ public class UsrMemberController {
 		if (Utility.empty(email)) {
 			return "이메일를 입력해 주세요";
 		}
-
+		
 		int id = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 		if (id == -1) {
 //			이게 Member랑 타입이 안맞아서 Object로 바꿔준다.
 			return "이미 사용중인 아이디입니다.";
 		}
+		if (id == -2) {
+			return "이미 사용중인 이름, 이메일 입니다.";
+		}
+		
 
 		Member member = memberService.getMemberById(id);
 		return member;
