@@ -20,6 +20,6 @@ public class Member {
 	private String nickname;
 	private String cellphoneNum;
 	private String email;
-	private String delStatus;
+	private boolean delStatus;
 	private String delDate;
 }
