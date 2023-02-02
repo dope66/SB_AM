@@ -3,6 +3,7 @@
 DROP DATABASE IF EXISTS SB_AM;
 CREATE DATABASE SB_AM;
 USE SB_AM;
+# 게시판 
 CREATE TABLE article(
 	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	regDate DATETIME NOT NULL,
@@ -11,6 +12,8 @@ CREATE TABLE article(
 	title VARCHAR(200) NOT NULL,
 	`body` TEXT NOT NULL
 );
+
+# TEST Data
 INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
@@ -27,3 +30,19 @@ updateDate = NOW(),
 title ='title3',
 `body`= 'body3';
 
+# 회원 
+ CREATE TABLE `member`(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	loginId VARCHAR(20) NOT NULL,
+	loginPw VARCHAR(100) NOT NULL,
+	`authLevel` SMALLINT UNSIGNED NOT NULL DEFAULT 3 COMMENT '권한 레벨 (3= 일반 , 7 = 관리자)',
+	`name` VARCHAR(20) NOT NULL,
+	nickname VARCHAR(20) NOT NULL,
+	cellphoneNum VARCHAR(20) NOT NULL,
+	email VARCHAR(50) NOT NULL,
+	delStatus TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '탈퇴여부 (0 = 탈퇴전 , 1 = 탈퇴 후 )',
+	delDate DATETIME  COMMENT '탈퇴 날짜'
+ );
+ 
