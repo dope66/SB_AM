@@ -52,10 +52,10 @@ public class UsrMemberController {
 		int id = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 		if (id == -1) {
 //			이게 Member랑 타입이 안맞아서 Object로 바꿔준다.
-			return "이미 사용중인 아이디입니다.";
+			return  Utility.f("이미 사용중인 아이디%s입니다.",loginId);
 		}
 		if (id == -2) {
-			return "이미 사용중인 이름, 이메일 입니다.";
+			return  Utility.f("이미 사용중인 이름(%s), 이메일(%s) 입니다.",loginId,email);
 		}
 		
 
