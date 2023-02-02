@@ -46,3 +46,33 @@ title ='title3',
 	delDate DATETIME  COMMENT '탈퇴 날짜'
  );
  
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate =  NOW(),
+loginId = 'admin',
+loginPw ='admin',
+`authLevel` ='7',
+`name` ='admin',
+nickname ='admin',
+cellphoneNum ='010-1234-5678',
+email ='prince628@naver.com';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate =  NOW(),
+loginId = 'test1',
+loginPw ='test1',
+`name` ='test1',
+nickname ='test1',
+cellphoneNum ='010-1234-1111',
+email ='1@naver.com';
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate =  NOW(),
+loginId = 'test2',
+loginPw ='test2',
+`name` ='test2',
+nickname ='test2',
+cellphoneNum ='010-1234-2222',
+email ='2@naver.com';
