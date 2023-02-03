@@ -22,7 +22,7 @@ public class MemberService {
 		if (existsMember != null) {
 			return -1;
 		}
-		
+		// 이름 이메일 중복체크
 		existsMember = getMemberByNameEmailnId(nickname, email);
 		if (existsMember != null) {
 			return -2;
