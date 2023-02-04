@@ -9,17 +9,17 @@ public class ResultData {
 	@Getter
 	private String msg;
 	@Getter
-	private Object datal;
+	private Object data1;
 	// ResultData 오버로딩
 	public static ResultData from(String resultCode, String msg) {
 		return from(resultCode, msg, null);
 	}
 
-	public static ResultData from(String resultCode, String msg, Object datal) {
+	public static ResultData from(String resultCode, String msg, Object data1) {
 		ResultData rd = new ResultData();
 		rd.resultCode = resultCode;
 		rd.msg = msg;
-		rd.datal = datal;
+		rd.data1 = data1;
 
 		return rd;
 	}
