@@ -24,7 +24,7 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
-	public ResultData doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
+	public ResultData<Member> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
 			String email) {
 
 //		 아이디가 빠지거나 공백인경우
@@ -50,9 +50,9 @@ public class UsrMemberController {
 			return ResultData.from("F-6","이멜을 입력해주세요");
 		}
 		
-		ResultData doJoinRd = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
+		ResultData<Integer> doJoinRd = memberService.doJoin(loginId, loginPw, name, nickname, cellphoneNum, email);
 		if (doJoinRd.isFail()) {
-			return  doJoinRd;
+			return   ResultData.from(doJoinRd.getResultCode(),doJoinRd.getMsg());
 		}
 
 		Member member = memberService.getMemberById((int)doJoinRd.getData1());
