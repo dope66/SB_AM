@@ -44,7 +44,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/getArticles")
 	@ResponseBody
-	public ResultData getArticles() {
+	public ResultData<List<Article>> getArticles() {
 		List<Article> articles = articleService.getArticles();
 		
 		return ResultData.from("S-1","게시물 리스트",articles);
@@ -52,14 +52,14 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public String doDelete(int id) {
+	public ResultData<Integer> doDelete(int id) {
 		Article article = articleService.getArticle(id);
 		if (article == null) {
-			return id + "번 게시글은 존재하지 않습니다.";
+			return ResultData.from("F-1",Utility.f("%d 번 게시글은 존재하지 않습니다.", id));
 		}
 //		articles.remove(article);
 		articleService.deleteArticle(id);
-		return id + "게시물을 삭제하였습니다.";
+		return ResultData.from("S-1",Utility.f("%d 번 게시글을 삭제했습니다.", id),id);
 	}
 
 	@RequestMapping("/usr/article/doModify")
@@ -75,7 +75,7 @@ public class UsrArticleController {
 	}
 	@RequestMapping("/usr/article/getArticle")
 	@ResponseBody
-	public ResultData getArticle(int id) {
+	public ResultData<Article> getArticle(int id) {
 		/// 전에는 Object 였음 result 전에는
 		Article article = articleService.getArticle(id);
 		if (article == null) {
