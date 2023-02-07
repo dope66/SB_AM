@@ -30,9 +30,10 @@ public class ArticleService {
 	}
 
 
-	public void modifyArticle(int id, String title, String body) {
+	public ResultData<Article> modifyArticle(int id, String title, String body) {
 		articleRepository.modifyArticle(id,title,body);
-
+		Article article = getArticle(id);
+		return ResultData.from("S-1", Utility.f("%d 번게시물 수정하였습니다.",id),"article",article);
 	}
 	public List<Article> getArticles() {
 		return articleRepository.getArticles();
@@ -43,6 +44,14 @@ public class ArticleService {
 		
 		int id =articleRepository.getLastInsertId(); 
 		
-		return ResultData.from("S-1",Utility.f("%d 번 게시물이 생성되었습니다.",id),id);
+		return ResultData.from("S-1",Utility.f("%d 번 게시물이 생성되었습니다.",id),"id",id);
+	}
+	public ResultData<Article> actorCanModify(int loginedMemberId, Article article) {
+		// TODO Auto-generated method stub
+		if(loginedMemberId != article.getMemberId()) {
+			return ResultData.from("F-B","해당 게시물에 권한이 없습니다.");
+		}
+		
+		return ResultData.from("S-1","수정 가능");
 	}
 }
