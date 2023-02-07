@@ -12,6 +12,8 @@ import com.khw.exam.demo.util.Utility;
 import com.khw.exam.demo.vo.Article;
 import com.khw.exam.demo.vo.ResultData;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UsrArticleController {
 	
@@ -27,7 +29,7 @@ public class UsrArticleController {
 	//액션메서드
 	@RequestMapping("/usr/article/doAdd")
 	@ResponseBody
-	public ResultData<Article> doAdd(String title, String body) {
+	public ResultData<Article> doAdd(HttpSession httpSession ,String title, String body) {
 		if(Utility.empty(title)){
 			return ResultData.from("F-1","제목을 입력해주세요");
 		}
