@@ -76,3 +76,10 @@ loginPw ='test2',
 nickname ='test2',
 cellphoneNum ='010-1234-2222',
 email ='2@naver.com';
+
+
+ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;
+
+UPDATE article
+SET memberId = 2
+WHERE memberId = 0
