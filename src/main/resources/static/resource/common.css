@@ -8,14 +8,20 @@ html > body{
 	font-family: 'DeogonPrincess', sans-serif;
 }
 
-.table-box-type1 > table {
-	width:100%;
-	
+.table-box-type-1 > table {
+	width: 100%;
+}
+ 
+.table-box-type-1 > table th, .table-box-type-1 > table td {
+	border:1px solid black;
+	padding: 10px;
+	text-align: center;
+}
+.btn-text-link{
+	color:black;
+}
+.btn-text-link:hover{
+	color:silver;
+	text-decoration: underline;
 }
 
-.table-box-type1 > table th, .table-box-type-1 > table td{
-	border :1px solid black;
-	padding : 10px;
-	text-align:center;
-	
-}
