@@ -87,10 +87,10 @@ public class UsrArticleController {
 		}
 		int loginedMemberId = (int)httpSession.getAttribute("loginedMemberId");
 		Article article = articleService.getArticle(id);
-		if (article == null) {
-			return ResultData.from("F-1",Utility.f("%d번 게시물은 존재하지 않습니다.", id));
-		}
-		ResultData<Article> actorCanModifyRd =articleService.actorCanModify(loginedMemberId,article);
+//		if (article == null) {
+//			return ResultData.from("F-1",Utility.f("%d번 게시물은 존재하지 않습니다.", id));
+//		}
+		ResultData actorCanModifyRd =articleService.actorCanMD(loginedMemberId,article);
 		if(actorCanModifyRd.isFail()) {
 			return actorCanModifyRd;
 		}
