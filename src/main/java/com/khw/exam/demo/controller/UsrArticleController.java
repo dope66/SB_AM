@@ -98,15 +98,10 @@ public class UsrArticleController {
 		return articleService.modifyArticle(id, title, body);
 	}
 	// 상세보기
-	@RequestMapping("/usr/article/getArticle")
-	@ResponseBody
-	public ResultData<Article> getArticle(int id) {
-		/// 전에는 Object 였음 result 전에는
+	@RequestMapping("/usr/article/detail")
+	public String detail(Model model,int id) {
 		Article article = articleService.getArticle(id);
-		if (article == null) {
-			return ResultData.from("F-1",Utility.f("%d번 게시글은 존재하지 않습니다.", id));
-//			return id + "번 게시글은 존재하지 않습니다.";
-		}
-		return ResultData.from("S-1",Utility.f("%d번 게시글 입니다.", id),"article",article);
+		model.addAttribute("article",article);
+		return "usr/article/detail";
 	}
 }
