@@ -1,5 +1,6 @@
 package com.khw.exam.demo.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import com.khw.exam.demo.service.MemberService;
 import com.khw.exam.demo.util.Utility;
 import com.khw.exam.demo.vo.Member;
 import com.khw.exam.demo.vo.ResultData;
+import com.khw.exam.demo.vo.Rq;
 
 @Controller
 public class UsrMemberController {
@@ -28,6 +30,7 @@ public class UsrMemberController {
 	public String showLogin() {
 		return "usr/member/login";
 	}
+
 	@RequestMapping("/usr/member/doJoin")
 	@ResponseBody
 	public ResultData<Member> doJoin(String loginId, String loginPw, String name, String nickname, String cellphoneNum,
@@ -65,10 +68,11 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(HttpSession httpSession, String loginId, String loginPw) {
+	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
+		Rq rq = (Rq) req.getAttribute("rq");
 
-		// 중복 체크 
-		if(httpSession.getAttribute("loginedMemberId")!=null) {
+		// 중복 체크
+		if (rq.getLoginedMemberId() != 0) {
 			return Utility.jsHistoryBack("이미 로그인 되어있습니다.");
 		}
 		if (Utility.empty(loginId)) {
@@ -76,35 +80,35 @@ public class UsrMemberController {
 		}
 //		비밀번호
 		if (Utility.empty(loginPw)) {
-			return Utility.jsHistoryBack( "비밀번호를 입력해주세요");
+			return Utility.jsHistoryBack("비밀번호를 입력해주세요");
 		}
-		
+
 		Member member = memberService.getMemberByLoginId(loginId);
-		
-		if(member ==null) {
-			return Utility.jsHistoryBack( "존재하지 않는 아이디 입니다..");
+
+		if (member == null) {
+			return Utility.jsHistoryBack("존재하지 않는 아이디 입니다..");
 		}
-		if(member.getLoginPw().equals(loginPw) == false) {
+		if (member.getLoginPw().equals(loginPw) == false) {
 			return Utility.jsHistoryBack("비밀번호가 일치 하지 않습니다.");
 		}
-		//위를 다 뚫고 내려오면 로그인이 된거지 
-		
-		// 세션에 회원 번호를 저장 
-		httpSession.setAttribute("loginedMemberId", member.getId());
-		return Utility.jsReplace( Utility.f("%s님 환영합니다.",member.getNickname()),"/");
+		// 위를 다 뚫고 내려오면 로그인이 된거지
+
+		// 세션에 회원 번호를 저장
+		rq.login(member);
+//		
+		return Utility.jsReplace(Utility.f("%s님 환영합니다.", member.getNickname()), "/");
 	}
-	
-	
+
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
-	public ResultData doLogout(HttpSession httpSession) {
-
-		if(httpSession.getAttribute("loginedMemberId")==null) {
-			return ResultData.from("F-1", "로그인 상태가 아닙니다.");
+	public String doLogout(HttpServletRequest req) {
+		Rq rq = (Rq) req.getAttribute("rq");
+		if (rq.getLoginedMemberId() == 0) {
+			return Utility.jsHistoryBack("로그인 상태가 아닙니다.");
 		}
-		httpSession.removeAttribute("loginedMemberId");
-		return ResultData.from("S-1", "로그아웃 되었습니다.");
+		rq.logout();
+
+		return Utility.jsReplace("로그아웃 되었습니다.","/");
 	}
-	
-	
+
 }
