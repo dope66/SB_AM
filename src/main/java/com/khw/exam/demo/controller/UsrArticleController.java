@@ -36,7 +36,7 @@ public class UsrArticleController {
 		// 로그인 안했는데 게시판 작성 안되게 하는거
 		System.out.println("doAdd");
 //		Rq rq = new Rq(req);
-		Rq rq = (Rq)req.getAttribute("rq");
+		Rq rq = (Rq) req.getAttribute("rq");
 
 		if (Utility.empty(title)) {
 			return ResultData.from("F-1", "제목을 입력해주세요");
@@ -63,10 +63,7 @@ public class UsrArticleController {
 	@ResponseBody
 	public String doDelete(HttpServletRequest req, int id) {
 		Rq rq = (Rq) req.getAttribute("rq");
-;
-		if(rq.getLoginedMemberId()==0) {
-			return Utility.jsHistoryBack("로그인 후 이용해주세요.");
-		}
+		;
 		// 아이디 받아와서 대조해서 맞으면 넘기는걸로
 		Article article = articleService.getArticle(id);
 		if (article == null) {
@@ -83,17 +80,13 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
 	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
-		Rq rq = (Rq) req.getAttribute("rq");
 
-		if(rq.getLoginedMemberId()==0){
-			return ResultData.from("F-A", "로그인 후 이용해주세요.");
-		}
+		Rq rq = (Rq) req.getAttribute("rq");
 		
 		Article article = articleService.getArticle(id);
-//		if (article == null) {
-//			return ResultData.from("F-1",Utility.f("%d번 게시물은 존재하지 않습니다.", id));
-//		}
+
 		ResultData actorCanModifyRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+
 		if (actorCanModifyRd.isFail()) {
 			return actorCanModifyRd;
 		}
@@ -101,6 +94,23 @@ public class UsrArticleController {
 		return articleService.modifyArticle(id, title, body);
 	}
 
+	@RequestMapping("/usr/article/modify")
+	public String showModify(HttpServletRequest req, Model model, int id) {
+
+		Rq rq = (Rq) req.getAttribute("rq");
+		
+		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+
+		if (actorCanMDRd.isFail()) {
+			return rq.jsReturnOnView(actorCanMDRd.getMsg(), true);
+		}
+		
+		model.addAttribute("article", article);
+		
+		return "usr/article/modify";
+	}
 	// 상세보기
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(HttpServletRequest req, Model model, int id) {
