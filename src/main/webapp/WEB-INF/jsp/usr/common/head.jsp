@@ -6,7 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>${pageTitle }</title>
-<script src="https://unpkg.com/tailwindcss-jit-cdn"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css" />
+<!-- 데이지 UI -->
+<link href="https://cdn.jsdelivr.net/npm/daisyui@2.31.0/dist/full.css" rel="stylesheet" type="text/css" />
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <link rel="stylesheet"

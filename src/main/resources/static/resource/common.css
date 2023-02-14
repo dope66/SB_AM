@@ -24,4 +24,8 @@ html > body{
 	color:silver;
 	text-decoration: underline;
 }
+body {
+	min-width:800px;
+	
+}
 
