@@ -29,28 +29,29 @@ public class UsrArticleController {
 	}
 
 	// 액션메서드
-	@RequestMapping("/usr/article/doAdd")
+	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
-	public ResultData<Article> doAdd(HttpServletRequest req, String title, String body) {
+	public String doWrite(HttpServletRequest req, String title, String body) {
 		// 로그인 안했는데 게시판 작성 안되게 하는거
-		System.out.println("doAdd");
+		System.out.println("doWrite");
 //		Rq rq = new Rq(req);
 		Rq rq = (Rq) req.getAttribute("rq");
 
 		if (Utility.empty(title)) {
-			return ResultData.from("F-1", "제목을 입력해주세요");
+			return Utility.jsHistoryBack("제목을 입력해주세요");
 		}
 		if (Utility.empty(body)) {
-			return ResultData.from("F-2", "내용을 입력해주세요");
+			return Utility.jsHistoryBack("내용을 입력해주세요");
 		}
 
 		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
 		int id = (int) writeArticleRd.getData1();
-		Article article = articleService.getArticle(id);
-
-		return ResultData.from(writeArticleRd.getResultCode(), writeArticleRd.getMsg(), "article", article);
+		return Utility.jsReplace(Utility.f("%d 번쨰 게시물을 작성하였습니다", id),Utility.f("detail?id=%d",id));
 	}
-
+	@RequestMapping("/usr/article/write")
+	public String showWrite(HttpServletRequest req, String title, String body) {
+		return "usr/article/write";
+	}
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model) {
 		List<Article> articles = articleService.getArticles();
