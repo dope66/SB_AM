@@ -33,8 +33,8 @@ public class ArticleService {
 		articleRepository.modifyArticle(id, title, body);
 	}
 
-	public List<Article> getArticles() {
-		return articleRepository.getArticles();
+	public List<Article> getArticles(int boardId) {
+		return articleRepository.getArticles(boardId);
 	}
 
 	public ResultData<Integer> writeArticle(int memberId, String title, String body) {

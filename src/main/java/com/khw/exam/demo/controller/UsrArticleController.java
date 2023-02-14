@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.khw.exam.demo.service.ArticleService;
+import com.khw.exam.demo.service.BoardService;
 import com.khw.exam.demo.util.Utility;
 import com.khw.exam.demo.vo.Article;
+import com.khw.exam.demo.vo.Board;
 import com.khw.exam.demo.vo.ResultData;
 import com.khw.exam.demo.vo.Rq;
 
@@ -20,11 +22,13 @@ import com.khw.exam.demo.vo.Rq;
 public class UsrArticleController {
 
 	private ArticleService articleService;
+	private BoardService boardService;
 
 	// 의존성 주입
 	@Autowired
-	public UsrArticleController(ArticleService articleService) {
+	public UsrArticleController(ArticleService articleService, BoardService boardService) {
 		this.articleService = articleService;
+		this.boardService = boardService;
 
 	}
 
@@ -46,15 +50,21 @@ public class UsrArticleController {
 
 		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), title, body);
 		int id = (int) writeArticleRd.getData1();
-		return Utility.jsReplace(Utility.f("%d 번쨰 게시물을 작성하였습니다", id),Utility.f("detail?id=%d",id));
+		return Utility.jsReplace(Utility.f("%d 번쨰 게시물을 작성하였습니다", id), Utility.f("detail?id=%d", id));
 	}
+
 	@RequestMapping("/usr/article/write")
 	public String showWrite(HttpServletRequest req, String title, String body) {
 		return "usr/article/write";
 	}
+
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model) {
-		List<Article> articles = articleService.getArticles();
+	public String showList(Model model, int boardId) {
+		Board board = boardService.getBoardById(boardId);
+		
+		List<Article> articles = articleService.getArticles(boardId);
+		
+		model.addAttribute("board", board);
 		model.addAttribute("articles", articles);
 		return "usr/article/list";
 	}
@@ -81,7 +91,7 @@ public class UsrArticleController {
 	public String doModify(HttpServletRequest req, int id, String title, String body) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		Article article = articleService.getArticle(id);
 
 		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
@@ -90,14 +100,14 @@ public class UsrArticleController {
 			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
 		articleService.modifyArticle(id, title, body);
-		return Utility.jsReplace(Utility.f("%d 번 게시글을 수정했씁니다.", id),Utility.f("detail?id=%d",id));
+		return Utility.jsReplace(Utility.f("%d 번 게시글을 수정했씁니다.", id), Utility.f("detail?id=%d", id));
 	}
 
 	@RequestMapping("/usr/article/modify")
 	public String showModify(HttpServletRequest req, Model model, int id) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
-		
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
@@ -105,11 +115,12 @@ public class UsrArticleController {
 		if (actorCanMDRd.isFail()) {
 			return rq.jsReturnOnView(actorCanMDRd.getMsg(), true);
 		}
-		
+
 		model.addAttribute("article", article);
-		
+
 		return "usr/article/modify";
 	}
+
 	// 상세보기
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(HttpServletRequest req, Model model, int id) {

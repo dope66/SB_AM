@@ -14,21 +14,30 @@
 	<select id="getArticle" resultType="Article">
 		SELECT *
 		FROM article
-		WHERE id=#{id}
+		WHERE
+		id=#{id}
 	</select>
 	<select id="getForPrintArticle" resultType="Article">
-		SELECT A.*,M.nickname AS writerName
+		SELECT A.*,M.nickname
+		AS writerName
 		FROM article as A
 		INNER JOIN `member` AS M
-		ON A.memberId=M.id
+		ON
+		A.memberId=M.id
 		WHERE A.id=#{id}
 	</select>
 
 	<select id="getArticles" resultType="Article">
 		SELECT A.*,M.nickname AS writerName
 		FROM article as A
-		INNER JOIN `member` AS M
+		INNER JOIN
+		`member` AS M
 		ON A.memberId=M.id
+		WHERE 1=1
+<!-- if 조건이 하나면 이처럼 안해도 되지만 여러개일시 이러한 방식으로 처리 -->
+		<if test="boardId!=0">
+		 AND A.boardId=#{boardId}
+		</if>
 		ORDER BY A.id DESC
 	</select>
 
