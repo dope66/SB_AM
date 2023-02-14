@@ -3,7 +3,6 @@ package com.khw.exam.demo.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -66,11 +65,10 @@ public class UsrArticleController {
 		;
 		// 아이디 받아와서 대조해서 맞으면 넘기는걸로
 		Article article = articleService.getArticle(id);
-		if (article == null) {
-			return Utility.jsHistoryBack(Utility.f("%d 번 게시글은 존재하지 않습니다.", id));
-		}
-		if (rq.getLoginedMemberId() != article.getMemberId()) {
-			return Utility.jsHistoryBack("해당 게시물에 권한이 없습니다.");
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
 //		articles.remove(article);
 		articleService.deleteArticle(id);
@@ -79,19 +77,19 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData<Article> doModify(HttpServletRequest req, int id, String title, String body) {
+	public String doModify(HttpServletRequest req, int id, String title, String body) {
 
 		Rq rq = (Rq) req.getAttribute("rq");
 		
 		Article article = articleService.getArticle(id);
 
-		ResultData actorCanModifyRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
 
-		if (actorCanModifyRd.isFail()) {
-			return actorCanModifyRd;
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
-
-		return articleService.modifyArticle(id, title, body);
+		articleService.modifyArticle(id, title, body);
+		return Utility.jsReplace(Utility.f("%d 번 게시글을 수정했씁니다.", id),Utility.f("detail?id=%d",id));
 	}
 
 	@RequestMapping("/usr/article/modify")
