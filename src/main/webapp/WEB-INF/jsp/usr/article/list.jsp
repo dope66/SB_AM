@@ -6,12 +6,15 @@
 
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
-		<c:if test="${rq.getLoginedMemberId() != 0 }">
-			<div class="mb-2 flex justify-end">
+		<div class="mb-2 flex justify-between items-center">
+			<div>
+				<span>${articlesCount }개</span>
+			</div>
+			<c:if test="${rq.getLoginedMemberId() != 0 }">
 				<a class="btn-text-link btn btn-active btn-ghost"
 					href="/usr/article/write">WRITE</a>
-			</div>
-		</c:if>
+			</c:if>
+		</div>
 		<div class="table-box-type-1">
 			<table class="table w-full">
 				<thead>

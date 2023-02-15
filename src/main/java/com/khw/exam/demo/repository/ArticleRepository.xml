@@ -40,7 +40,14 @@
 		</if>
 		ORDER BY A.id DESC
 	</select>
-
+	<select id="getArticlesCount" resultType="int">
+		SELECT COUNT(*)
+		FROM article
+		WHERE 1=1
+		<if test="boardId !=0">
+			AND boardId = #{boardId}
+		</if>
+	</select>
 	<delete id="deleteArticle">
 		DELETE FROM article
 		WHERE id =#{id}
