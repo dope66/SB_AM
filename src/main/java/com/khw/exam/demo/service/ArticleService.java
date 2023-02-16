@@ -37,8 +37,8 @@ public class ArticleService {
 		return articleRepository.getArticles(boardId);
 	}
 
-	public ResultData<Integer> writeArticle(int memberId, String title, String body) {
-		articleRepository.writeArticle(memberId, title, body);
+	public ResultData<Integer> writeArticle(int memberId,int boardId ,String title, String body) {
+		articleRepository.writeArticle(memberId, boardId,title, body);
 
 		int id = articleRepository.getLastInsertId();
 
