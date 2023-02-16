@@ -18,11 +18,13 @@ import com.khw.exam.demo.vo.Rq;
 public class UsrMemberController {
 
 	private MemberService memberService;
+	private Rq rq;
 
 	// 의존성 주입
 	@Autowired
-	public UsrMemberController(MemberService memberService) {
+	public UsrMemberController(MemberService memberService,Rq rq) {
 		this.memberService = memberService;
+		this.rq = rq;
 
 	}
 
@@ -68,9 +70,8 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doLogin")
 	@ResponseBody
-	public String doLogin(HttpServletRequest req, String loginId, String loginPw) {
-		Rq rq = (Rq) req.getAttribute("rq");
-
+	public String doLogin( String loginId, String loginPw) {
+	
 		// 중복 체크
 		if (rq.getLoginedMemberId() != 0) {
 			return Utility.jsHistoryBack("이미 로그인 되어있습니다.");
@@ -101,9 +102,9 @@ public class UsrMemberController {
 
 	@RequestMapping("/usr/member/doLogout")
 	@ResponseBody
-	public String doLogout(HttpServletRequest req) {
-		Rq rq = (Rq) req.getAttribute("rq");
-		if (rq.getLoginedMemberId() == 0) {
+	public String doLogout() {
+		
+			if (rq.getLoginedMemberId() == 0) {
 			return Utility.jsHistoryBack("로그인 상태가 아닙니다.");
 		}
 		rq.logout();
