@@ -2,12 +2,11 @@ package com.khw.exam.demo.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.khw.exam.demo.service.ArticleService;
@@ -39,6 +38,9 @@ public class UsrArticleController {
 	@ResponseBody
 	public String doWrite(int boardId, String title, String body) {
 		
+		if(boardId!=1 && boardId !=2) {
+			return Utility.jsHistoryBack("존재하지 않는 게시판 입니다.");
+		}
 		if (Utility.empty(title)) {
 			return Utility.jsHistoryBack("제목을 입력해주세요");
 		}
@@ -57,18 +59,26 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/list")
-	public String showList(Model model, int boardId) {
-
+	public String showList(Model model,@RequestParam(defaultValue="1")  int boardId,@RequestParam(defaultValue="1")int page) {
+		if(page<=0) {
+			return rq.jsReturnOnView("페이지 번호가 올바르지 않습니다..",true);
+		}
 		Board board = boardService.getBoardById(boardId);
 		if(board == null) {
 			return rq.jsReturnOnView("존재하지 않는 게시판입니다.",true);
 		}
 		int articlesCount = articleService.getArticlesCount(boardId);
-		List<Article> articles = articleService.getArticles(boardId);
+		int itemsInAPage =10;
+		List<Article> articles = articleService.getArticles(boardId,itemsInAPage, page);
+		
+		int pagesCount =(int) Math.ceil((double)articlesCount/itemsInAPage);
 		
 		model.addAttribute("board", board);
 		model.addAttribute("articles", articles);
 		model.addAttribute("articlesCount", articlesCount);
+		model.addAttribute("boardId", boardId);
+		model.addAttribute("pagesCount", pagesCount);
+		model.addAttribute("page", page);
 		return "usr/article/list";
 	}
 
