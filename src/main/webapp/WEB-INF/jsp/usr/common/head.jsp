@@ -14,6 +14,8 @@
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
 <link rel="stylesheet" href="/resource/common.css" />
+<!-- 공통 JS // defer= 나중에 실행하겠다  -->
+<script src="/resource/common.js" defer="defer"></script>
 </head>
 <body>
 	<header>

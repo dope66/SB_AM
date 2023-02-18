@@ -35,14 +35,32 @@
 		`member` AS M
 		ON A.memberId=M.id
 		WHERE 1=1
-<!-- if 조건이 하나면 이처럼 안해도 되지만 여러개일시 이러한 방식으로 처리 -->
+		<!-- if 조건이 하나면 이처럼 안해도 되지만 여러개일시 이러한 방식으로 처리 -->
 		<if test="boardId!=0">
-		 AND A.boardId=#{boardId}
+			AND A.boardId=#{boardId}
+		</if>
+		<if test="searchKeyword != ''">
+			<!--다중 조건 -->
+			<choose>
+				<when test="searchKeywordTypeCode =='title'">
+					AND title LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<when test="searchKeywordTypeCode =='body'">
+					AND title LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<otherwise>
+					AND(
+					title LIKE CONCAT('%',#{searchKeyword},'%')
+					OR body
+					LIKE CONCAT('%',#{searchKeyword},'%')
+					)
+				</otherwise>
+			</choose>
 		</if>
 		ORDER BY A.id DESC
 		LIMIT #{limitStart},#{itemsInAPage}
-		
-		
+
+
 	</select>
 	<select id="getArticlesCount" resultType="int">
 		SELECT COUNT(*)
@@ -50,6 +68,24 @@
 		WHERE 1=1
 		<if test="boardId !=0">
 			AND boardId = #{boardId}
+		</if>
+		<if test="searchKeyword != ''">
+			<!--다중 조건 -->
+			<choose>
+				<when test="searchKeywordTypeCode =='title'">
+					AND title LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<when test="searchKeywordTypeCode =='body'">
+					AND title LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<otherwise>
+					AND(
+					title LIKE CONCAT('%',#{searchKeyword},'%')
+					OR body
+					LIKE CONCAT('%',#{searchKeyword},'%')
+					)
+				</otherwise>
+			</choose>
 		</if>
 	</select>
 	<delete id="deleteArticle">
