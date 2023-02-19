@@ -136,7 +136,11 @@ public class UsrArticleController {
 	// 상세보기
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id) {
-
+		ResultData<Integer> increaseHitCountRd = articleService.increaseHitCount(id);
+		if(increaseHitCountRd.isFail()) {
+			//responsebody가 있냐? 없음 -> utility 안됨
+			return rq.jsReturnOnView(increaseHitCountRd.getMsg(), true);
+		}
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 		model.addAttribute("article", article);
 		return "usr/article/detail";

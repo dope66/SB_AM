@@ -33,14 +33,15 @@ public class ArticleService {
 		articleRepository.modifyArticle(id, title, body);
 	}
 
-	public List<Article> getArticles(int boardId, String searchKeywordTypeCode, String searchKeyword, int itemsInAPage, int page) {
-		
-		int limitStart =(page -1) * itemsInAPage;
+	public List<Article> getArticles(int boardId, String searchKeywordTypeCode, String searchKeyword, int itemsInAPage,
+			int page) {
+
+		int limitStart = (page - 1) * itemsInAPage;
 		return articleRepository.getArticles(boardId, searchKeywordTypeCode, searchKeyword, limitStart, itemsInAPage);
 	}
 
-	public ResultData<Integer> writeArticle(int memberId,int boardId ,String title, String body) {
-		articleRepository.writeArticle(memberId, boardId,title, body);
+	public ResultData<Integer> writeArticle(int memberId, int boardId, String title, String body) {
+		articleRepository.writeArticle(memberId, boardId, title, body);
 
 		int id = articleRepository.getLastInsertId();
 
@@ -95,7 +96,16 @@ public class ArticleService {
 	}
 
 	public int getArticlesCount(int boardId, String searchKeywordTypeCode, String searchKeyword) {
+
+		return articleRepository.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
+	}
+
+	public ResultData<Integer> increaseHitCount(int id) {
+		int affectedRowsCount =articleRepository.increaseHitCount(id);
 		
-		return articleRepository.getArticlesCount(boardId,searchKeywordTypeCode,searchKeyword);
+		if(affectedRowsCount ==0) {
+			return ResultData.from("F-1", "해당 게시물은 존재하지않습니다.","affectedRowsCount",affectedRowsCount);
+		}
+		return ResultData.from("S-1", "조회수 증가.","affectedRowsCount",affectedRowsCount);
 	}
 }
