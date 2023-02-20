@@ -136,13 +136,24 @@ public class UsrArticleController {
 	// 상세보기
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id) {
-		ResultData<Integer> increaseHitCountRd = articleService.increaseHitCount(id);
-		if(increaseHitCountRd.isFail()) {
-			//responsebody가 있냐? 없음 -> utility 안됨
-			return rq.jsReturnOnView(increaseHitCountRd.getMsg(), true);
-		}
+		
+		
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 		model.addAttribute("article", article);
 		return "usr/article/detail";
+	}
+	
+	@RequestMapping("/usr/article/doIncreaseHitCountRd")
+	@ResponseBody
+	public ResultData<Integer> doIncreaseHitCountRd(int id) {
+		ResultData<Integer> increaseHitCountRd = articleService.increaseHitCount(id);
+		if(increaseHitCountRd.isFail()) {
+			return increaseHitCountRd;
+		}
+		ResultData<Integer> rd =  ResultData.from(increaseHitCountRd.getResultCode(),increaseHitCountRd.getMsg(),"hitCount",articleService.getArticleHitCount(id));
+//			
+		rd.setData2("id",id);
+		
+		return rd;
 	}
 }

@@ -3,6 +3,28 @@
 <c:set var="pageTitle" value="ARTICLE DETAIL" />
 <%@ include file="../common/head.jsp"%>
 
+<script>
+
+	const params = {};
+	params.id = parseInt('${param.id}')
+	function ArticlDetail__increaseHitCount(){
+		$.get('doIncreaseHitCountRd',{
+			id : params.id
+			ajaxMode:'Y'
+		},function(data){
+			$('.article-detail__hit-count').empty().html(data.data1);
+		},'json');
+	}
+	
+	$(function(){
+		/* 실전 코드*/
+		/* ArticlDetail__increaseHitCount(); */
+		
+		/* 연습코드 */
+		setTimeout(ArticlDetail__increaseHitCount,3000)
+	})
+	
+</script>
 <section class="mt-8 text-xl">
 	<div class="container mx-auto px-3">
 		<div class="table-box-type-1">
@@ -26,7 +48,11 @@
 					</tr>
 					<tr>
 						<th>조회수</th>
-						<td>${article.hitCount}</td>
+						<td>
+						<span class="badge article-detail__hit-count">
+							${article.hitCount}
+						</span>
+						</td>
 					</tr>
 					<tr>
 						<th>작성자</th>
