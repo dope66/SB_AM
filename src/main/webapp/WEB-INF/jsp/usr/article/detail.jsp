@@ -8,8 +8,13 @@
 	const params = {};
 	params.id = parseInt('${param.id}')
 	function ArticlDetail__increaseHitCount(){
+		const localStorageKey = 'article__' + params.id +'__alreadyView';
+		if(localStorage.getItem(localStorageKey)){
+			return;
+		}
+		localStorage.setItem(localStorageKey,true);
 		$.get('doIncreaseHitCountRd',{
-			id : params.id
+			id : params.id,
 			ajaxMode:'Y'
 		},function(data){
 			$('.article-detail__hit-count').empty().html(data.data1);
