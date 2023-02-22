@@ -20,4 +20,7 @@ public class Article{
 	
 	private String writerName;
 	private boolean actorCanChangeData;
+	private int sumReactionPoint ;
+	private int goodReactionPoint ;
+	private int badReactionPoint ;
 }

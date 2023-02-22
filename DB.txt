@@ -128,8 +128,16 @@ SELECT LAST_INSERT_ID();
 SELECT LAST_INSERT_ID();
 
 ALTER TABLE article ADD COLUMN hitCount INT UNSIGNED NOT NULL DEFAULT 0;
-
-
+# reactionPoint 테이블 생성
+CREATE TABLE reactionPoint(
+	id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	regDate DATETIME NOT NULL,
+	updateDate DATETIME NOT NULL,
+	memberId INT UNSIGNED NOT NULL,
+	relTypeCode VARCHAR(20) NOT NULL COMMENT '관련 데이터 타입 코드',
+	relId INT UNSIGNED NOT NULL COMMENT '관련데이터 번호',
+	`point` SMALLINT NOT NULL 
+);
 # 게시물 갯수 늘리기
 -- INSERT Into article
 -- (
