@@ -29,7 +29,7 @@
 			LEFT JOIN reactionPoint AS RP
 			ON RP.relTypeCode = 'article'
 			AND A.id = RP.relId
-			WHERE A.id = 2
+			WHERE A.id = #{id}
 			GROUP BY A.id
 	</select>
 
@@ -71,6 +71,7 @@
 			ON RP.relTypeCode = 'article'
 			AND A.id = RP.relId
 			GROUP BY A.id
+			ORDER BY A.id DESC
 	</select>
 	<select id="getArticlesCount" resultType="int">
 		SELECT COUNT(*)
