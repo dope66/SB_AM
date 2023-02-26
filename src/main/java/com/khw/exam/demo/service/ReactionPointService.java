@@ -15,16 +15,16 @@ public class ReactionPointService {
 		this.reactionPointRepository = reactionPointRepository;
 	}
 
-	public ReactionPoint getReactionPoint(int loginedMemberId, int id) {
-		return reactionPointRepository.getReactionPoint(loginedMemberId, id);
+	public ReactionPoint getReactionPoint(int loginedMemberId, String relTypeCode, int id) {
+		return reactionPointRepository.getReactionPoint(loginedMemberId, relTypeCode, id);
 	}
 
-	public int doGoodReactionPoint(int loginedMemberId, int id) {
-		return reactionPointRepository.doGoodReactionPoint(loginedMemberId, id);
+	public void doReactionPoint(int loginedMemberId, int id, String relTypeCode, int point) {
+		reactionPointRepository.doReactionPoint(loginedMemberId, id, relTypeCode, point);
 	}
 
-	public int doBadReactionPoint(int loginedMemberId, int id) {
-		return reactionPointRepository.doBadReactionPoint(loginedMemberId, id);
+	public void delReactionPoint(int loginedMemberId, String relTypeCode, int id) {
+		reactionPointRepository.delReactionPoint(loginedMemberId, relTypeCode, id);
 	}
 
 
