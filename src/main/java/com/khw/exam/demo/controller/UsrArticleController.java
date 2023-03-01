@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.khw.exam.demo.service.ArticleService;
 import com.khw.exam.demo.service.BoardService;
+import com.khw.exam.demo.service.ReplyService;
 import com.khw.exam.demo.util.Utility;
 import com.khw.exam.demo.vo.Article;
 import com.khw.exam.demo.vo.Board;
+import com.khw.exam.demo.vo.Reply;
 import com.khw.exam.demo.vo.ResultData;
 import com.khw.exam.demo.vo.Rq;
 
@@ -22,17 +24,17 @@ public class UsrArticleController {
 
 	private ArticleService articleService;
 	private BoardService boardService;
+	private ReplyService replyService;
 	private Rq rq;
 
 	// 의존성 주입
 	@Autowired
-	public UsrArticleController(ArticleService articleService, BoardService boardService, Rq rq) {
+	public UsrArticleController(ArticleService articleService, BoardService boardService, ReplyService replyService, Rq rq) {
 		this.articleService = articleService;
 		this.boardService = boardService;
+		this.replyService = replyService;
 		this.rq = rq;
-
 	}
-
 	// 액션메서드
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
@@ -135,14 +137,17 @@ public class UsrArticleController {
 
 	// 상세보기
 	@RequestMapping("/usr/article/detail")
-	public String showDetail(Model model, int id) {
-		
-		
+	public String ShowDetail(Model model, int id) {
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		List<Reply> replies = replyService.getForPrintReplies("article", id);
+		
 		model.addAttribute("article", article);
+		model.addAttribute("replies", replies);
+
 		return "usr/article/detail";
 	}
-	
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
 	public ResultData<Integer> doIncreaseHitCountRd(int id) {

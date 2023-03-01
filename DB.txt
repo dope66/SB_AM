@@ -180,7 +180,7 @@ memberId = 3,
 relTypeCode = 'article',
 relId = 1,
 `body` = '댓글 4';
-
+ALTER TABLE `SB_AM_cjh`.`reply` ADD INDEX (`relTypeCode` , `relId`);
 
 
 # 게시물 갯수 늘리기
