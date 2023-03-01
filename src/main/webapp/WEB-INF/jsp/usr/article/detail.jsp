@@ -116,11 +116,37 @@
 		</div>
 	</div>
 </section>
-
+<script>
+	function ReplyWrite__submitForm(form){
+		form.body.value = form.body.value.trim();
+		
+		if(form.body.value.length<2){
+			alert('2글자 이상 입력해 주세요');
+			form.body.focus();
+			return;
+			
+		}
+		form.submit();
+		
+	}
+	
+</script>
 <section class="mt-5 text-xl">
 	<div class="container mx-auto px-3 pb-5 border-bottom-line">
 		<h2>댓글</h2>
-		<form action="../reply/doWrite" method="POST">
+		
+		<!-- 		반복문 돌려서 list처리 여기서부터 -->
+		<div class="py-2 pl-16 border-bottom-line text-base">
+			<div class="font-semibold"><span>작성자</span></div>
+			<div><span>내용</span></div>
+			<div class="text-sm text-gray-400"><span>날짜</span></div>
+		</div>
+<!-- 		여기까지 -->
+		
+		
+		<form action="../reply/doWrite" method="POST" onsubmit="ReplyWrite__submitForm(this); return false">
+			<input type="hidden" name="relTypeCode" value="article" />
+			<input type="hidden" name="relId" value="${article.id }" />
 			<div class="mt-4 p-4 border rounded-lg border-gray-400 text-base">
 				<div class="mb-2"><span>nickname</span></div>
 				<textarea class="textarea textarea-borderd w-full"name="body"rows="2" placeholder="글을 남겨주세요"></textarea>
