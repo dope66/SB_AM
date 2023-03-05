@@ -20,7 +20,7 @@ public class Utility {
 	public static String f(String format, Object... args) {
 		return String.format(format, args);
 	}
-
+	/** 바로 뒤의 페이지로 이동*/
 	public static String jsHistoryBack(String msg) {
 		if (msg == null) {
 			msg = "";
@@ -35,7 +35,7 @@ public class Utility {
 							</script>
 				""", msg);
 	}
-
+	/** 메세지 확인후 특정 주소로 이동*/
 	public static String jsReplace(String msg, String uri) {
 		if (msg == null) {
 			msg = "";

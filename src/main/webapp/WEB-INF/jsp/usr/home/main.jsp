@@ -6,7 +6,7 @@
 <section class="mt-8">
 	<div class="container mx-auto">
 		<div>
-			lorem
+			메인 화면입니다.
 			<div>안녕하세요</div>
 
 		</div>

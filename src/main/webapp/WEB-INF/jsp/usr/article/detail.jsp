@@ -106,7 +106,7 @@
 					</tr>
 					<tr>
 						<th>내용</th>
-						<td>${article.body}</td>
+						<td>${article.getForPrintBody()}</td>
 					</tr>
 				</tbody>
 			</table>
@@ -136,15 +136,20 @@
 	}
 </script>
 
-<section class="mt-5 text-xl">
+<section class="mt-5 text-xl mb-5">
 	<div class="container mx-auto px-3">
 		<h2>댓글<span class="text-base">(${replies.size() }개)</span></h2>
 
 		<c:forEach var="reply" items="${replies}">
 			<div class="py-2 pl-16 border-bottom-line text-base">
 				<div class="font-semibold"><span>${reply.writerName }</span></div>
-				<div><span>${reply.body }</span></div>
+				<div><span>${reply.getForPrintBody() }</span></div>
 				<div class="text-sm text-gray-400"><span>${reply.updateDate }</span></div>
+				<c:if test="${rq.loginedMember.id == reply.memberId}">
+				<div>
+				<button class="btn-text-link btn btn-active btn-ghost btn-sm">삭제</button>
+				</div>
+				</c:if>
 			</div>
 		</c:forEach>
 		
@@ -153,7 +158,7 @@
 				<input type="hidden" name="relTypeCode" value="article" />
 				<input type="hidden" name="relId" value="${article.id }" />
 				<div class="mt-4 p-4 rounded-lg border border-gray-400 text-base">
-					<div class="mb-2"><span>현재 로그인한 회원 닉네임</span></div>
+					<div class="mb-2"><span>${rq.loginedMember.nickname }</span></div>
 					<textarea class="textarea textarea-bordered w-full" name="body" rows="2" placeholder="댓글을 남겨보세요"></textarea>
 					<div class="flex justify-end"><button class="btn btn-active btn-ghost btn-sm">등록</button></div>
 				</div>

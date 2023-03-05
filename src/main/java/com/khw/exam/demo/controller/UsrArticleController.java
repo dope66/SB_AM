@@ -27,6 +27,7 @@ public class UsrArticleController {
 	private ReplyService replyService;
 	private Rq rq;
 
+
 	// 의존성 주입
 	@Autowired
 	public UsrArticleController(ArticleService articleService, BoardService boardService, ReplyService replyService, Rq rq) {
