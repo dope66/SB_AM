@@ -142,7 +142,7 @@ public class UsrArticleController {
 
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
-		List<Reply> replies = replyService.getForPrintReplies("article", id);
+		List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(),"article", id);
 		
 		model.addAttribute("article", article);
 		model.addAttribute("replies", replies);
