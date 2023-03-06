@@ -1,5 +1,6 @@
 package com.khw.exam.demo.controller;
 
+import com.khw.exam.demo.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,4 +34,21 @@ public class UsrReplyController {
 		return Utility.jsReplace(Utility.f("%d번 댓글이 생성되었습니다.", id), Utility.f("../article/detail?id=%d", relId));
 
 	}
+	@RequestMapping("/usr/reply/doDelete")
+	@ResponseBody
+	public String doDelete(int id) {
+
+		Reply reply = replyService.getReply(id);
+
+		ResultData actorCanMDRd = replyService.actorCanMD(rq.getLoginedMemberId(), reply);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+
+		replyService.deleteReply(id);
+
+		return Utility.jsReplace(Utility.f("%d번 댓글을 삭제했습니다", id), Utility.f("../article/detail?id=%d", reply.getRelId()));
+	}
+
 }
