@@ -2,10 +2,7 @@ package com.khw.exam.demo.repository;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import com.khw.exam.demo.vo.Reply;
 
@@ -48,4 +45,19 @@ public interface ReplyRepository {
 				WHERE id = #{id}
 			""")
 	void deleteReply(int id);
+	@Select("""
+   			SELECT R.*,M.nickname AS writerName
+   				FROM reply AS R
+   				INNER JOIN `member` AS M
+   				ON R.memberId = M.id
+   				WHERE R.id = #{id}
+			""")
+	Reply getForPrintReply(int id);
+	@Update("""
+			UPDATE reply
+				SET updateDate = NOW(),
+					`body` = #{body}
+				WHERE id = #{id}
+			""")
+	void modifyReply(int id, String body);
 }

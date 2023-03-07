@@ -141,41 +141,71 @@
 
         form.submit();
     }
+
+    function ReplyModify__getForm(replyId, i) {
+        $.get('../reply/getModifyForm', {
+            id : replyId,
+            ajaxMode : 'Y'
+        }, function(data){
+            let modifyForm = $('#' + i);
+
+            let addHtml = `
+				<form action="../reply/doModify" method="POST" onsubmit="ReplyWrite__submitForm(this); return false;">
+					<input type="hidden" name="id" value="\${data.data1.id}" />
+					<div class="mt-2 p-4 rounded-lg border border-gray-400 text-base">
+						<div class="mb-2"><span>\${data.data1.writerName}</span></div>
+						<textarea class="textarea textarea-bordered w-full" name="body" rows="2" placeholder="댓글을 남겨보세요">\${data.data1.body}</textarea>
+						<div class="flex justify-end">
+							<a href="detail?id=\${data.data1.relId}" class="btn btn-active btn-ghost btn-sm mr-2">취소</a>
+							<button class="btn btn-active btn-ghost btn-sm">등록</button>
+						</div>
+					</div>
+				</form>`;
+
+            modifyForm.empty().html("");
+            modifyForm.append(addHtml);
+
+        }, 'json');
+
+    }
 </script>
 
 <section class="mt-5 text-xl mb-5">
     <div class="container mx-auto px-3">
         <h2>댓글<span class="text-base">(${replies.size() }개)</span></h2>
 
-        <c:forEach var="reply" items="${replies}">
-            <div class="py-2 pl-16 border-bottom-line text-base">
-                <div class="flex justify-between">
-                    <div class="font-semibold"><span>${reply.writerName }</span></div>
+        <c:forEach var="reply" items="${replies}" varStatus="status">
+            <div id="${status.count}" class="py-2 pl-16 border-bottom-line text-base">
+                <div class="py-2 pl-16 border-bottom-line text-base">
+                    <div class="flex justify-between">
+                        <div class="font-semibold"><span>${reply.writerName }</span></div>
 
-<%--                    <c:if test="${rq.loginedMember.id == reply.memberId}">--%>
-                    <c:if test="${reply.actorCanChangeData}">
-                        <!-- 					여기서부터 -->
-                        <div class="dropdown">
-                            <button class="btn btn-circle btn-ghost btn-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     class="inline-block w-5 h-5 stroke-current">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-                                </svg>
-                            </button>
-                            <ul tabindex="0"
-                                class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-20">
-                                <li><a>수정</a></li>
-                                <li><a onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;" href="../reply/doDelete?id=${reply.id }">삭제</a></li>
-                            </ul>
-                        </div>
-                        <!-- 	    			여기까지 -->
-                    </c:if>
+                            <%--                    <c:if test="${rq.loginedMember.id == reply.memberId}">--%>
+                        <c:if test="${reply.actorCanChangeData}">
+                            <!-- 여기서부터 -->
+                            <div class="dropdown">
+                                <button class="btn btn-circle btn-ghost btn-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         class="inline-block w-5 h-5 stroke-current">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                                    </svg>
+                                </button>
+                                <ul tabindex="0"
+                                    class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-20">
+                                    <li><a onclick="ReplyModify__getForm(${reply.id }, ${status.count });">수정</a></li>
+                                    <li><a onclick="if(confirm('정말 삭제하시겠습니까?') == false) return false;"
+                                           href="../reply/doDelete?id=${reply.id }">삭제</a></li>
+                                </ul>
+                            </div>
+                            <!-- 여기까지 -->
+                        </c:if>
+
+                    </div>
+                    <div><span>${reply.getForPrintBody() }</span></div>
+                    <div class="text-sm text-gray-400"><span>${reply.updateDate }</span></div>
 
                 </div>
-                <div><span>${reply.getForPrintBody() }</span></div>
-                <div class="text-sm text-gray-400"><span>${reply.updateDate }</span></div>
-
             </div>
         </c:forEach>
 
