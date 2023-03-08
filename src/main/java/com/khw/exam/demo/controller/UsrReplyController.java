@@ -50,11 +50,11 @@ public class UsrReplyController {
 
 		return Utility.jsReplace(Utility.f("%d번 댓글을 삭제했습니다", id), Utility.f("../article/detail?id=%d", reply.getRelId()));
 	}
-	@RequestMapping("/usr/reply/getModifyForm")
+	@RequestMapping("/usr/reply/getReplyContent")
 	@ResponseBody
-	public ResultData<Reply> getModifyForm(int id) {
+	public ResultData<Reply> getReplyContent(int id) {
 
-		Reply reply = replyService.getForPrintReply(id);
+		Reply reply = replyService.getReplyContent(id);
 
 		if(reply == null) {
 			return ResultData.from("F-1", "해당 댓글은 존재하지 않습니다");

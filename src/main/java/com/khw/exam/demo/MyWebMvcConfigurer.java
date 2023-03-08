@@ -49,7 +49,7 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/reply/doWrite");
 		ir.addPathPatterns("/usr/reply/doDelete");
 		ir.addPathPatterns("/usr/reply/doModify");
-		ir.addPathPatterns("/usr/reply/getModifyForm");
+		ir.addPathPatterns("/usr/reply/getReplyContent");
 		ir.addPathPatterns("/usr/member/doLogout");
 
 		ir = registry.addInterceptor(needLogoutInterceptor);

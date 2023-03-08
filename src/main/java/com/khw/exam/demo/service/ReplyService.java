@@ -67,8 +67,8 @@ public class ReplyService {
 		replyRepository.deleteReply(id);
 	}
 
-	public Reply getForPrintReply(int id) {
-		return replyRepository.getForPrintReply(id);
+	public Reply getReplyContent(int id) {
+		return replyRepository.getReplyContent(id);
 	}
 
 	public void modifyReply(int id, String body) {

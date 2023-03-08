@@ -118,7 +118,7 @@
             </table>
         </div>
         <div class="btns mt-2">
-            <button class="btn-text-link btn btn-active btn-ghost" type="button" onclick="history.back();">뒤로가기</button>
+            <button class="btn-text-link btn btn-active btn-ghost" type="button" onclick="location.href='/usr/article/list'">뒤로가기</button>
             <c:if test="${article.actorCanChangeData }">
                 <a class="btn-text-link btn btn-active btn-ghost" href="modify?id=${article.id }">수정</a>
                 <a class="btn-text-link btn btn-active btn-ghost"
@@ -142,13 +142,21 @@
         form.submit();
     }
 
-    function ReplyModify__getForm(replyId, i) {
-        $.get('../reply/getModifyForm', {
-            id : replyId,
-            ajaxMode : 'Y'
-        }, function(data){
-            let modifyForm = $('#' + i);
+    originalForm = null;
+    originalId = null;
 
+
+    function ReplyModify__getForm(replyId, i) {
+        if (originalForm != null) {
+            ReplyModify__cancel(originalId);
+        }
+        $.get('../reply/getReplyContent', {
+            id: replyId,
+            ajaxMode: 'Y'
+        }, function (data) {
+            let replyContent = $('#' + i);
+            originalId  = i;
+            originalForm = replyContent.html();
             let addHtml = `
 				<form action="../reply/doModify" method="POST" onsubmit="ReplyWrite__submitForm(this); return false;">
 					<input type="hidden" name="id" value="\${data.data1.id}" />
@@ -156,16 +164,24 @@
 						<div class="mb-2"><span>\${data.data1.writerName}</span></div>
 						<textarea class="textarea textarea-bordered w-full" name="body" rows="2" placeholder="댓글을 남겨보세요">\${data.data1.body}</textarea>
 						<div class="flex justify-end">
-							<a href="detail?id=\${data.data1.relId}" class="btn btn-active btn-ghost btn-sm mr-2">취소</a>
+							<a onclick="ReplyModify__cancel(\${i})" class="btn btn-active btn-ghost btn-sm mr-2">취소</a>
 							<button class="btn btn-active btn-ghost btn-sm">등록</button>
 						</div>
 					</div>
 				</form>`;
 
-            modifyForm.empty().html("");
-            modifyForm.append(addHtml);
+            replyContent.empty().html("");
+            replyContent.append(addHtml);
 
         }, 'json');
+    }
+
+    function ReplyModify__cancel(i) {
+        let replyContent = $('#' + i);
+        replyContent.html(originalForm);
+
+        originalForm = null;
+        originalId = null;
 
     }
 </script>
