@@ -15,6 +15,7 @@ import com.khw.exam.demo.util.Utility;
 
 import lombok.Getter;
 
+
 @Component
 @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Rq {
@@ -22,6 +23,7 @@ public class Rq {
 	private int loginedMemberId;
 	@Getter
 	private Member loginedMember;
+
 	private HttpServletRequest req;
 	private HttpServletResponse resp;
 	private HttpSession session;
@@ -32,10 +34,9 @@ public class Rq {
 		this.session = req.getSession();
 
 		int loginedMemberId = 0;
-		//생성자 , 지역변수
 		Member loginedMember = null;
-		// 로그인한게 없다면
-		if (session.getAttribute("loginedMemberId") != null) {
+
+		if(session.getAttribute("loginedMemberId") != null) {
 			loginedMemberId = (int) session.getAttribute("loginedMemberId");
 			loginedMember = memberService.getMemberById(loginedMemberId);
 		}
@@ -43,7 +44,6 @@ public class Rq {
 		this.loginedMemberId = loginedMemberId;
 		this.loginedMember = loginedMember;
 
-		this.req.setAttribute("rq", this);
 	}
 
 	public void jsPrintHistoryBack(String msg) {
@@ -68,17 +68,10 @@ public class Rq {
 		session.removeAttribute("loginedMemberId");
 	}
 
-	/** 잘못된 경로의 경우 되돌아간다. */
 	public String jsReturnOnView(String msg, boolean historyBack) {
 		req.setAttribute("msg", msg);
 		req.setAttribute("historyBack", historyBack);
 		return "usr/common/js";
-	}
-
-	// 해당 메서드는 Rq객체의 생성을 유도한다.
-	// 편의를 위해서 BeforeActionInterceptor에서 호출해줘야함
-	public void initOnBeforeActionInterceptor() {
-
 	}
 
 }
