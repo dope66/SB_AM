@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.khw.exam.demo.vo.Member;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface MemberRepository {
@@ -47,5 +48,29 @@ public interface MemberRepository {
 			AND email =#{email}
 			""")
 	public Member getMemberByNameEmailnId(String name, String email);
-	
+	@Update("""
+			<script>
+				UPDATE `member`
+					<set>
+						updateDate = NOW(),
+						<if test="nickname != null">
+							nickname = #{nickname},
+						</if>
+						<if test="cellphoneNum != null">
+							cellphoneNum = #{cellphoneNum},
+						</if>
+						<if test="email != null">
+							email = #{email}
+						</if>
+					</set>
+					WHERE id = #{loginedMemberId}
+				</script>
+			""")
+    void doModify(int loginedMemberId, String nickname, String cellphoneNum, String email);
+	@Update("""
+			UPDATE `member`
+				SET loginPw = #{loginPw}
+				WHERE id = #{loginedMemberId}
+			""")
+	void doPassWordModify(int loginedMemberId, String loginPw);
 }
