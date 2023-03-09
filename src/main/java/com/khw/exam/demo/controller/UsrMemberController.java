@@ -124,7 +124,9 @@ public class UsrMemberController {
         if(rq.getLoginedMember().getLoginPw().equals(loginPw) ==false){
             return rq.jsReturnOnView("일치 하지 않습니다.",true);
         }
-        return "usr/member/modify";
+        String memberModifyAuthKey = memberService.genMemberModifyAuthKey(rq.getLoginedMemberId());
+
+        return "usr/member/modify?memberModifyAuthKey=" + memberModifyAuthKey;
     }
     @RequestMapping("/usr/member/doModify")
     @ResponseBody
