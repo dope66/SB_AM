@@ -69,7 +69,8 @@ public interface MemberRepository {
     void doModify(int loginedMemberId, String nickname, String cellphoneNum, String email);
 	@Update("""
 			UPDATE `member`
-				SET loginPw = #{loginPw}
+				SET updataDate = NOW(), 
+				loginPw = #{loginPw}
 				WHERE id = #{loginedMemberId}
 			""")
 	void doPassWordModify(int loginedMemberId, String loginPw);
