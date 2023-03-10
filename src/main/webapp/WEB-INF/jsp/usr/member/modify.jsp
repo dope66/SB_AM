@@ -40,6 +40,7 @@
 <section class="mt-8 text-xl">
     <div class="container mx-auto px-3">
         <form action="doModify" method="POST" onsubmit="MemberModify__submit(this); return false;">
+            <input type="text" name="memberModifyAuthKey", value="${param.memberModifyAuthKey}">
             <div class="table-box-type-1">
                 <table class="table table-zebra w-full">
                     <colgroup>
@@ -79,7 +80,7 @@
                     <button class="btn-text-link btn btn-active btn-ghost" type="button" onclick="history.back();">뒤로가기</button>
                 </div>
                 <div class="btns mt-2">
-                    <a class="btn btn-active btn-ghost mr-2" href="passWordModify">비밀번호 변경</a>
+                    <a class="btn btn-active btn-ghost mr-2" href="passWordModify?memberModifyAuthKey=${param.memberModifyAuthKey}">비밀번호 변경</a>
                     <input class="btn-text-link btn btn-active btn-ghost" type="submit" value="수정"/>
                 </div>
             </div>

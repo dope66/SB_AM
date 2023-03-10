@@ -70,4 +70,12 @@ public class MemberService {
 
         return memberModifyAuthKey;
     }
+
+    public ResultData checkMemberModifyAuthKey(int loginedMemberId, String memberModifyAuthKey) {
+        String saved=attrService.getValue("member",loginedMemberId,"extra","memberModifyAuthKey");
+        if(!saved.equals(memberModifyAuthKey)){
+            return ResultData.from("F-1","일치하지 않거나 만료된 인증코드 입니다.");
+        }
+        return ResultData.from("S-1","인증이 완료 되었습니다.");
+    }
 }

@@ -69,7 +69,7 @@ public interface MemberRepository {
     void doModify(int loginedMemberId, String nickname, String cellphoneNum, String email);
 	@Update("""
 			UPDATE `member`
-				SET updataDate = NOW(), 
+				SET updateDate = NOW(), 
 				loginPw = #{loginPw}
 				WHERE id = #{loginedMemberId}
 			""")
