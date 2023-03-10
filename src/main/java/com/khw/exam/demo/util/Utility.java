@@ -62,7 +62,7 @@ public class Utility {
 
 		return dateStr;
 	}
-
+	// 난수 생성기( 암호화 )
 	public static String getTempPassword(int length) {
 		int index = 0;
 		char[] charArr = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',

@@ -63,9 +63,9 @@ public class MemberService {
 
 
     public String genMemberModifyAuthKey(int loginedMemberId) {
-
+        // 난수 발생후 받기
         String memberModifyAuthKey = Utility.getTempPassword(10);
-
+        //5 분 제한 시한
         attrService.setValue("member", loginedMemberId, "extra", "memberModifyAuthKey", memberModifyAuthKey, Utility.getDateStrLater(60 * 5));
 
         return memberModifyAuthKey;

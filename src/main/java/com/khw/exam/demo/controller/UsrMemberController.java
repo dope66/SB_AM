@@ -117,17 +117,23 @@ public class UsrMemberController {
     }
 
     @RequestMapping("/usr/member/doCheckPassword")
+    @ResponseBody
     public String doCheckPassword(String loginPw) {
         if (Utility.empty(loginPw)) {
-            return rq.jsReturnOnView("비밀번호를 입력해주세요",true);
+            return Utility.jsHistoryBack("비밀번호를 입력해주세요");
         }
         if(rq.getLoginedMember().getLoginPw().equals(loginPw) ==false){
-            return rq.jsReturnOnView("일치 하지 않습니다.",true);
+            return Utility.jsHistoryBack("일치 하지 않습니다.");
         }
         String memberModifyAuthKey = memberService.genMemberModifyAuthKey(rq.getLoginedMemberId());
 
-        return "usr/member/modify?memberModifyAuthKey=" + memberModifyAuthKey;
+        return Utility.jsReplace("비밀번호가 확인되었습니다", Utility.f("modify?memberModifyAuthKey=%s", memberModifyAuthKey));
     }
+    @RequestMapping("/usr/member/modify")
+    public String showModify(String memberModifyAuthKey) {
+        return "usr/member/modify";
+    }
+
     @RequestMapping("/usr/member/doModify")
     @ResponseBody
     public String doModify(String nickname, String cellphoneNum, String email) {
