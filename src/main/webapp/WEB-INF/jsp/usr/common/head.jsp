@@ -5,7 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>${pageTitle }</title>
+	<title>${pageTitle}</title>
+	<!-- 파비콘 불러오기 -->
+	<link rel="shortcut icon" href="/favicon.ico" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.7/tailwind.min.css" />
 	<!-- 데이지 UI -->
 	<link href="https://cdn.jsdelivr.net/npm/daisyui@2.31.0/dist/full.css" rel="stylesheet" type="text/css" />

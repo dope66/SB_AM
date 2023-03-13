@@ -27,8 +27,6 @@ public class UsrArticleController {
 	private ReplyService replyService;
 	private Rq rq;
 
-
-	// 의존성 주입
 	@Autowired
 	public UsrArticleController(ArticleService articleService, BoardService boardService, ReplyService replyService, Rq rq) {
 		this.articleService = articleService;
@@ -36,14 +34,16 @@ public class UsrArticleController {
 		this.replyService = replyService;
 		this.rq = rq;
 	}
-	// 액션메서드
+
+	@RequestMapping("/usr/article/write")
+	public String showWrite() {
+		return "/usr/article/write";
+	}
+
 	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
 	public String doWrite(int boardId, String title, String body) {
 
-		if (boardId != 1 && boardId != 2) {
-			return Utility.jsHistoryBack("존재하지 않는 게시판 입니다.");
-		}
 		if (Utility.empty(title)) {
 			return Utility.jsHistoryBack("제목을 입력해주세요");
 		}
@@ -52,40 +52,46 @@ public class UsrArticleController {
 		}
 
 		ResultData<Integer> writeArticleRd = articleService.writeArticle(rq.getLoginedMemberId(), boardId, title, body);
-		int id = (int) writeArticleRd.getData1();
-		return Utility.jsReplace(Utility.f("%d 번쨰 게시물을 작성하였습니다", id), Utility.f("detail?id=%d", id));
-	}
 
-	@RequestMapping("/usr/article/write")
-	public String showWrite(String title, String body) {
-		return "/usr/article/write";
+		int id = writeArticleRd.getData1();
+
+		return Utility.jsReplace(Utility.f("%d번 글이 생성되었습니다", id), Utility.f("detail?id=%d", id));
 	}
 
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
-			@RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "title") String searchKeywordTypeCode,
-			@RequestParam(defaultValue = "") String searchKeyword) {
+						   @RequestParam(defaultValue = "1") int page,
+						   @RequestParam(defaultValue = "title") String searchKeywordTypeCode,
+						   @RequestParam(defaultValue = "") String searchKeyword) {
+
 		if (page <= 0) {
-			return rq.jsReturnOnView("페이지 번호가 올바르지 않습니다..", true);
+			return rq.jsReturnOnView("페이지번호가 올바르지 않습니다", true);
 		}
+
 		Board board = boardService.getBoardById(boardId);
+
 		if (board == null) {
-			return rq.jsReturnOnView("존재하지 않는 게시판입니다.", true);
+			return rq.jsReturnOnView("존재하지 않는 게시판입니다", true);
 		}
-		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode,searchKeyword);
+
+		int articlesCount = articleService.getArticlesCount(boardId, searchKeywordTypeCode, searchKeyword);
+
 		int itemsInAPage = 10;
-		List<Article> articles = articleService.getArticles(boardId, searchKeywordTypeCode, searchKeyword, itemsInAPage, page);
+
 		int pagesCount = (int) Math.ceil((double) articlesCount / itemsInAPage);
+
+		List<Article> articles = articleService.getArticles(boardId, searchKeywordTypeCode, searchKeyword, itemsInAPage,
+				page);
 
 		model.addAttribute("board", board);
 		model.addAttribute("articles", articles);
 		model.addAttribute("articlesCount", articlesCount);
 		model.addAttribute("boardId", boardId);
-		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("page", page);
+		model.addAttribute("pagesCount", pagesCount);
 		model.addAttribute("searchKeywordTypeCode", searchKeywordTypeCode);
 		model.addAttribute("searchKeyword", searchKeyword);
+
 		return "usr/article/list";
 	}
 
@@ -93,31 +99,17 @@ public class UsrArticleController {
 	@ResponseBody
 	public String doDelete(int id) {
 
-		// 아이디 받아와서 대조해서 맞으면 넘기는걸로
 		Article article = articleService.getArticle(id);
+
 		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
 
 		if (actorCanMDRd.isFail()) {
 			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
 		}
-//		articles.remove(article);
+
 		articleService.deleteArticle(id);
-		return Utility.jsReplace(Utility.f("%d 번 게시글을 삭제했습니다.", id), "list?boardId=1");
-	}
 
-	@RequestMapping("/usr/article/doModify")
-	@ResponseBody
-	public String doModify(int id, String title, String body) {
-
-		Article article = articleService.getArticle(id);
-
-		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
-
-		if (actorCanMDRd.isFail()) {
-			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
-		}
-		articleService.modifyArticle(id, title, body);
-		return Utility.jsReplace(Utility.f("%d 번 게시글을 수정했씁니다.", id), Utility.f("detail?id=%d", id));
+		return Utility.jsReplace(Utility.f("%d번 게시물을 삭제했습니다", id), "list?boardId=1");
 	}
 
 	@RequestMapping("/usr/article/modify")
@@ -136,30 +128,52 @@ public class UsrArticleController {
 		return "usr/article/modify";
 	}
 
-	// 상세보기
+	@RequestMapping("/usr/article/doModify")
+	@ResponseBody
+	public String doModify(int id, String title, String body) {
+
+		Article article = articleService.getArticle(id);
+
+		ResultData actorCanMDRd = articleService.actorCanMD(rq.getLoginedMemberId(), article);
+
+		if (actorCanMDRd.isFail()) {
+			return Utility.jsHistoryBack(actorCanMDRd.getMsg());
+		}
+
+		articleService.modifyArticle(id, title, body);
+
+		return Utility.jsReplace(Utility.f("%d번 게시물을 수정했습니다", id), Utility.f("detail?id=%d", id));
+	}
+
 	@RequestMapping("/usr/article/detail")
 	public String ShowDetail(Model model, int id) {
 
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
-		List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(),"article", id);
-		
+		List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(), "article", id);
+
 		model.addAttribute("article", article);
 		model.addAttribute("replies", replies);
 
 		return "usr/article/detail";
 	}
+
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
 	public ResultData<Integer> doIncreaseHitCountRd(int id) {
+
 		ResultData<Integer> increaseHitCountRd = articleService.increaseHitCount(id);
-		if(increaseHitCountRd.isFail()) {
+
+		if (increaseHitCountRd.isFail()) {
 			return increaseHitCountRd;
 		}
-		ResultData<Integer> rd =  ResultData.from(increaseHitCountRd.getResultCode(),increaseHitCountRd.getMsg(),"hitCount",articleService.getArticleHitCount(id));
-//			
-		rd.setData2("id",id);
-		
+
+		ResultData<Integer> rd = ResultData.from(increaseHitCountRd.getResultCode(), increaseHitCountRd.getMsg(),
+				"hitCount", articleService.getArticleHitCount(id));
+
+		rd.setData2("id", id);
+
 		return rd;
 	}
+
 }
