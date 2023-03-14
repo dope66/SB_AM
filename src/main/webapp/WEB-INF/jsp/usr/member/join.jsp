@@ -4,6 +4,9 @@
 <%@ include file="../common/head.jsp"%>
 
 <script>
+	let validLoginId = '';
+
+
 	function MemberJoin__submit(form) {
 		form.loginId.value = form.loginId.value.trim();
 		if (form.loginId.value.length == 0) {
@@ -11,7 +14,11 @@
 			form.loginId.focus();
 			return;
 		}
-
+		if (form.loginId.value != validLoginId) {
+			alert(form.loginId.value + '은(는) 사용할 수 없는 아이디 입니다');
+			form.loginId.focus();
+			return;
+		}
 		form.loginPw.value = form.loginPw.value.trim();
 		if (form.loginPw.value.length == 0) {
 			alert('비밀번호를 입력해주세요');
@@ -61,6 +68,36 @@
 
 		form.submit();
 	}
+	function checkLoginIdDup(el) {
+		$(".loginId-msg").empty();
+		const form = $(el).closest('form').get(0);
+
+		if (form.loginId.value.length == 0) {
+			return;
+		}
+
+		$.get('getLoginIdDup', {
+			loginId : form.loginId.value,
+			ajaxMode : 'Y'
+		}, function(data){
+			console.log(data);
+			$(".loginId-msg").html(data.data1 + '은(는) ' + data.msg);
+			if (data.success) {
+				validLoginId = data.data1;
+			}else {
+				validLoginId = '';
+			}
+		}, 'json');
+	}
+	function requiredData(el){
+		$(".required-msg").empty();
+		const form = $(el).closest('form').get(0);
+
+		if(form.loginPw.value.length !=0){
+			return;
+		}
+		$(".required-msg").html('필수 정보입니다.')
+	}
 </script>
 
 <section class="mt-8 text-xl">
@@ -76,33 +113,36 @@
 					<tr height="105">
 						<th>아이디</th>
 						<td>
-							<input class="input input-bordered w-full max-w-xs" type="text" name="loginId" placeholder="아이디를 입력해주세요" />
-							<div class="loginId-msg mt-1 h-5"></div>
+							<input class="input input-bordered w-full max-w-xs" type="text" name="loginId" placeholder="아이디를 입력해주세요" onblur="checkLoginIdDup(this);"/>
+							<div class="loginId-msg text-sm mt-2 h-5 text-red-500"></div>
+						</td>
+					</tr>
+					<tr height="105">
+						<th>비밀번호</th>
+						<td>
+							<input class="input input-bordered w-full max-w-xs" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요" onblur="requiredData(this);"/>
+							<div class="required-msg text-sm mt-2 h-5 text-red-500"></div>
 						</td>
 					</tr>
 					<tr>
-						<th>비밀번호</th>
-						<td><input class="input input-bordered w-full max-w-xs" type="text" name="loginPw" placeholder="비밀번호를 입력해주세요" /></td>
-					</tr>
-					<tr>
 						<th>비밀번호 확인</th>
-						<td><input class="input input-bordered w-full max-w-xs" type="text" name="loginPwConfirm" placeholder="비밀번호 확인을 입력해주세요" /></td>
+						<td><input class="input input-bordered w-full max-w-xs" type="password" name="loginPwConfirm" placeholder="비밀번호 확인을 입력해주세요" required="required"/></td>
 					</tr>
 					<tr>
 						<th>이름</th>
-						<td><input class="input input-bordered w-full max-w-xs" type="text" name="name" placeholder="이름을 입력해주세요" /></td>
+						<td><input class="input input-bordered w-full max-w-xs" type="text" name="name" placeholder="이름을 입력해주세요" required="required" /></td>
 					</tr>
 					<tr>
 						<th>닉네임</th>
-						<td><input class="input input-bordered w-full max-w-xs" type="text" name="nickname" placeholder="닉네임을 입력해주세요" /></td>
+						<td><input class="input input-bordered w-full max-w-xs" type="text" name="nickname" placeholder="닉네임을 입력해주세요" required="required"/></td>
 					</tr>
 					<tr>
 						<th>전화번호</th>
-						<td><input class="input input-bordered w-full max-w-xs" type="text" name="cellphoneNum" placeholder="전화번호를 입력해주세요" /></td>
+						<td><input class="input input-bordered w-full max-w-xs" type="text" name="cellphoneNum" placeholder="전화번호를 입력해주세요" required="required"/></td>
 					</tr>
 					<tr>
 						<th>이메일</th>
-						<td><input class="input input-bordered w-full max-w-xs" type="text" name="email" placeholder="이메일을 입력해주세요" /></td>
+						<td><input class="input input-bordered w-full max-w-xs" type="text" name="email" placeholder="이메일을 입력해주세요" required="required"/></td>
 					</tr>
 					<tr>
 						<td colspan="2"><input class="btn btn-active btn-ghost" type="submit" value="회원가입"/></td>

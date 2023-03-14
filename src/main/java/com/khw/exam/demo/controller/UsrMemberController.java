@@ -2,6 +2,7 @@ package com.khw.exam.demo.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.transform.Result;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -206,5 +207,18 @@ public class UsrMemberController {
 
         return Utility.jsReplace("비밀번호가 수정되었습니다", "myPage");
     }
+    @RequestMapping("/usr/member/getLoginIdDup")
+    @ResponseBody
+    public ResultData<String> getLoginIdDup(String loginId){
+        if(Utility.empty(loginId)){
+            return ResultData.from("F-1", "아이디를 입력해주세요");
+        }
+        Member member = memberService.getMemberByLoginId(loginId);
+        if(member != null){
+            return ResultData.from("F-2","이미 사용중인 아이디 입니다.","loginId",loginId);
+        }
+        return ResultData.from("S-1", "사용 가능한 아이디입니다.","loginId",loginId);
+    }
+
 
 }
