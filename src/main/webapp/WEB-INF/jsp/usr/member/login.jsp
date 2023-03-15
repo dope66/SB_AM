@@ -19,7 +19,7 @@
 						</tr>
 						<tr>
 							<th>로그인 비밀번호</th>
-							<td><input class="input input-bordered w-full max-w-xs" type="text" name="loginPw" placeholder="비밀번호를 입력해주세요" /></td>
+							<td><input class="input input-bordered w-full max-w-xs" type="password" name="loginPw" placeholder="비밀번호를 입력해주세요" /></td>
 						</tr>
 						<tr>
 							<td colspan="2"><input class="btn btn-active btn-ghost" type="submit" value="로그인"/></td>
