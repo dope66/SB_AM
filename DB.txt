@@ -204,6 +204,9 @@ ALTER TABLE `attr` ADD INDEX (`relTypeCode`, `typeCode`, `type2Code`);
 # attr에 만료날짜 추가
 ALTER TABLE `attr` ADD COLUMN `expireDate` DATETIME NULL AFTER `value`;
 
+# 멤버 테이블의 테스트 데이터를 sha256으로 업데이트
+UPDATE `member`
+SET loginPw = SHA2(loginPw, 256);
 
 # 게시물 갯수 늘리기
 -- INSERT Into article

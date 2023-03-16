@@ -89,7 +89,7 @@ public class UsrMemberController {
         if (member == null) {
             return Utility.jsHistoryBack("존재하지 않는 아이디 입니다..");
         }
-        if (member.getLoginPw().equals(loginPw) == false) {
+        if (member.getLoginPw().equals(Utility.sha256(loginPw)) == false) {
             return Utility.jsHistoryBack("비밀번호가 일치 하지 않습니다.");
         }
         // 위를 다 뚫고 내려오면 로그인이 된거지
@@ -126,7 +126,7 @@ public class UsrMemberController {
         if (Utility.empty(loginPw)) {
             return Utility.jsHistoryBack("비밀번호를 입력해주세요");
         }
-        if(rq.getLoginedMember().getLoginPw().equals(loginPw) ==false){
+        if (rq.getLoginedMember().getLoginPw().equals(Utility.sha256(loginPw)) == false) {
             return Utility.jsHistoryBack("일치 하지 않습니다.");
         }
         String memberModifyAuthKey = memberService.genMemberModifyAuthKey(rq.getLoginedMemberId());
@@ -204,7 +204,7 @@ public class UsrMemberController {
         }
 
         memberService.doPassWordModify(rq.getLoginedMemberId(), loginPw);
-
+        memberService.doPassWordModify(rq.getLoginedMemberId(), Utility.sha256(loginPw));
         return Utility.jsReplace("비밀번호가 수정되었습니다", "myPage");
     }
     @RequestMapping("/usr/member/getLoginIdDup")
